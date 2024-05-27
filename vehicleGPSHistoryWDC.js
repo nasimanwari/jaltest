@@ -77,6 +77,8 @@
         var signature = CryptoJS.HmacSHA1(stringToSign, secretKey).toString(CryptoJS.enc.Hex);
         var authorizationHeader = `CWS ${apiKey}:${signature}`;
 
+        console.log("Sending AJAX request to: " + url + queryString);
+
         $.ajax({
             url: url + queryString,
             type: 'GET',
@@ -86,30 +88,37 @@
                 'Accept': 'application/json'
             },
             success: function (resp) {
-                var tableData = resp.Result.map(item => ({
-                    "ECUSerialNumber": item.ECUSerialNumber,
-                    "NumberPlate": item.NumberPlate,
-                    "VINnumber": item.VINnumber,
-                    "Latitude": item.Latitude,
-                    "Longitude": item.Longitude,
-                    "Altitude": item.Altitude,
-                    "TripId": item.TripId,
-                    "KL15State": item.KL15State,
-                    "GPSSpeed": item.GPSSpeed,
-                    "Date": item.Date,
-                    "Odometer": item.Odometer,
-                    "FuelLevel1": item.FuelLevel1,
-                    "FuelLevel2": item.FuelLevel2,
-                    "AdBlueLevel": item.AdBlueLevel,
-                    "Driver1": item.Driver1,
-                    "Driver2": item.Driver2
-                }));
+                console.log("Received response: ", resp);
 
-                table.appendRows(tableData);
+                if (resp.Result) {
+                    var tableData = resp.Result.map(item => ({
+                        "ECUSerialNumber": item.ECUSerialNumber,
+                        "NumberPlate": item.NumberPlate,
+                        "VINnumber": item.VINnumber,
+                        "Latitude": item.Latitude,
+                        "Longitude": item.Longitude,
+                        "Altitude": item.Altitude,
+                        "TripId": item.TripId,
+                        "KL15State": item.KL15State,
+                        "GPSSpeed": item.GPSSpeed,
+                        "Date": item.Date,
+                        "Odometer": item.Odometer,
+                        "FuelLevel1": item.FuelLevel1,
+                        "FuelLevel2": item.FuelLevel2,
+                        "AdBlueLevel": item.AdBlueLevel,
+                        "Driver1": item.Driver1,
+                        "Driver2": item.Driver2
+                    }));
+
+                    table.appendRows(tableData);
+                } else {
+                    console.error("No data found in the response.");
+                }
+
                 doneCallback();
             },
             error: function (xhr, status, error) {
-                tableau.log("Error: " + xhr.responseText);
+                console.error("Error fetching data: " + xhr.responseText);
                 doneCallback();
             }
         });
