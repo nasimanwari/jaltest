@@ -17,5 +17,20 @@
             </div>
         </div>
     </div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            tableau.init({
+                initCallback: function() {
+                    console.log("Tableau initialized");
+                    $("#submitButton").prop("disabled", false);
+                }
+            });
+
+            $("#submitButton").click(function () {
+                tableau.connectionName = "Vehicle GPS History";
+                tableau.submit();
+            });
+        });
+    </script>
 </body>
 </html>
