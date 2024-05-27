@@ -62,7 +62,7 @@
     };
 
     myConnector.getData = function (table, doneCallback) {
-        var apiKey = 'D3C836A16D0AD04F0AB7A8EEF4A5CE701B5A1A8D';
+        vvar apiKey = 'D3C836A16D0AD04F0AB7A8EEF4A5CE701B5A1A8D';
         var secretKey = '7614CE3E15DA69AC805D71E63A9BB92491FC8B7F';
         var dateRequest = new Date().toISOString();
         var cif = 'B28861359';
@@ -106,6 +106,10 @@
                 }));
 
                 table.appendRows(tableData);
+                doneCallback();
+            },
+            error: function (xhr, status, error) {
+                tableau.log("Error: " + xhr.responseText);
                 doneCallback();
             }
         });
